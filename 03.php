@@ -142,7 +142,7 @@
     $spiralData = getSpiral(550);
     list($spiral, $origin) = $spiralData;
 
-    $input = 289326;
+    $input = trim(file_get_contents('./inputs/03.txt'));
     $coordinates = getCoordinates($input, $spiral);
 
     var_dump(distance($origin, $coordinates));

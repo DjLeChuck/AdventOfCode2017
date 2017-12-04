@@ -1,7 +1,7 @@
 <?php
 
-    $input = file_get_contents('./inputs/04.txt');
-    $arr = array_filter(explode("\n", $input));
+    $input = trim(file_get_contents('./inputs/04.txt'));
+    $arr = explode("\n", $input);
     $result = 0;
     $result2 = 0;
 
