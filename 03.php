@@ -39,7 +39,10 @@
     define('RIGHT', 1);
     define('UP', 2);
 
-    function getSpiral($size) {
+    function getSpiral($size, $inputForTwo) {
+        $spiral = [];
+        $spiral2 = [];
+
         // The initial number.
         $number = 1;
 
@@ -56,11 +59,18 @@
         // The dimension of the spiral.
         $dimension = $size * $size;
 
+        $number2 = 1;
+        $partTwoDone = false;
+
         // Loop
         for ( $count = 0; $count < $dimension; $count++ )
         {
           // Add the current number to the "x" and "y" coordinates.
           $spiral[$x][$y] = $number;
+
+          if (!$partTwoDone) {
+            $spiral2[$x][$y] = $number2;
+          }
 
           // Depending on the direction, set the "x" or "y" value.
           switch ( $direction )
@@ -95,6 +105,16 @@
           }
 
           $number++;
+
+          if (!$partTwoDone) {
+            $number2 = getNumber2($spiral2, $x, $y);
+
+            if ($number2 > $inputForTwo) {
+              echo 'Result2: '.$number2."\n";
+
+              $partTwoDone = true;
+            }
+          }
         }
 
         // Sort by "x" numerically.
@@ -119,6 +139,21 @@
         ];
     }
 
+    function getNumber2($spiral, $x, $y) {
+      $number2 = 0;
+
+      $number2 += !empty($spiral[$x - 1][$y]) ? $spiral[$x - 1][$y] : 0;
+      $number2 += !empty($spiral[$x - 1][$y - 1]) ? $spiral[$x - 1][$y - 1] : 0;
+      $number2 += !empty($spiral[$x][$y -1]) ? $spiral[$x][$y -1] : 0;
+      $number2 += !empty($spiral[$x + 1][$y]) ? $spiral[$x + 1][$y] : 0;
+      $number2 += !empty($spiral[$x + 1][$y + 1]) ? $spiral[$x + 1][$y + 1] : 0;
+      $number2 += !empty($spiral[$x][$y + 1]) ? $spiral[$x][$y + 1] : 0;
+      $number2 += !empty($spiral[$x - 1][$y + 1]) ? $spiral[$x - 1][$y + 1] : 0;
+      $number2 += !empty($spiral[$x + 1][$y - 1]) ? $spiral[$x + 1][$y - 1] : 0;
+
+      return $number2;
+    }
+
     /**
      * Renvoie les coordonnées du nombre demandé dans la spirale.
      *
@@ -139,10 +174,10 @@
         return null;
     }
 
-    $spiralData = getSpiral(550);
+    $input = (int) trim(file_get_contents('./inputs/03.txt'));
+    $spiralData = getSpiral(550, $input);
     list($spiral, $origin) = $spiralData;
 
-    $input = trim(file_get_contents('./inputs/03.txt'));
     $coordinates = getCoordinates($input, $spiral);
 
-    var_dump(distance($origin, $coordinates));
+    echo 'Result: '.distance($origin, $coordinates)."\n";
