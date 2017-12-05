@@ -45,5 +45,5 @@
         ++$steps2;
     } while ($x2 < $total);
 
-    echo 'Result: '.$steps.'<br>';
-    echo 'Result2: '.$steps2;
+    echo 'Result: '.$steps."\n";
+    echo 'Result2: '.$steps2."\n";

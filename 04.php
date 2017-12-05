@@ -47,5 +47,5 @@
         }
     }
 
-    echo 'Result: '.$result.'<br>';
-    echo 'Result2: '.$result2;
+    echo 'Result: '.$result."\n";
+    echo 'Result2: '.$result2."\n";

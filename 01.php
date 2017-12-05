@@ -33,5 +33,5 @@
         }
     }
 
-    echo 'Result: '.$sum.'<br>';
-    echo 'Result 2: '.$sum2;
+    echo 'Result: '.$sum."\n";
+    echo 'Result 2: '.$sum2."\n";

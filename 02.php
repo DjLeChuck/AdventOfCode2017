@@ -29,5 +29,5 @@
         }
     }
 
-    echo 'Result: '.$checksum.'<br>';
-    echo 'Result2: '.$checksum2;
+    echo 'Result: '.$checksum."\n";
+    echo 'Result2: '.$checksum2."\n";
