@@ -53,40 +53,59 @@
     // Partie 2
     $baseData = $names[$towerBase];
 
-    $weights = [];
+    // Additionne de manière récursive les poids d'une tour et ses dépendances
+    $getWeight = function ($item) use ($names, &$getWeight) {
+      $weight = $item['weight'];
 
-    foreach ($baseData['above'] as $name) {
-        $data = $names[$name];
-        $weight = $data['weight'];
+      foreach ($item['above'] as $name) {
+        $weight += $getWeight($names[$name]);
+      }
 
-        array_walk($data['above'], function ($aboveName) use (&$weight, $names) {
-            $weight += $names[$aboveName]['weight'];
-        });
+      return $weight;
+    };
 
-        $weights[$name] = $weight;
-    }
+    $done = false;
+    $current = $towerBase;
+    $aboves = $baseData['above'];
 
-    asort($weights);
+    do {
+      $weights = [];
 
-    $first = reset($weights);
-    $second = next($weights);
-    $last = end($weights);
-    $wrong = null;
-    $goodWeight = null;
-    $badWeight = null;
+      foreach ($aboves as $name) {
+        $weights[$name] = $getWeight($names[$name]);
+      }
 
-    if ($first !== $second) {
+      asort($weights);
+
+      $first = reset($weights);
+      $second = next($weights);
+      $last = end($weights);
+
+      if ($first === $second && $first !== $last) {
+        $wrong = array_search($last, $weights);
+      } elseif ($first !== $last) {
         $wrong = array_search($first, $weights);
-        $goodWeight = $second;
-        $badWeight = $first;
-    } else if ($first !== $last) {
-        $wrong = array_search(end($weights), $weights);
-        $goodWeight = $first;
-        $badWeight = $last;
-    }
-var_dump($weights);
-    if (null !== $wrong) {
+      } else {
+        $done = true;
+        $sibling = null;
+
+        // Récupération d'une des tours au même niveau
+        foreach ($names as $name => $data) {
+          if (in_array($current, $data['above'])) {
+            $first = reset($data['above']);
+            $sibling = $current === $first ? end($data['above']) : $first;
+
+            break;
+          }
+        }
+
+        $badWeight = $getWeight($names[$current]);
+        $goodWeight = $getWeight($names[$sibling]);
         $diff = abs($badWeight - $goodWeight);
 
-        echo 'Result2: '.(abs($names[$wrong]['weight'] - $diff))."\n";
-    }
+        echo 'Result2: '.(abs($names[$current]['weight'] - $diff))."\n";
+      }
+
+      $aboves = $names[$wrong]['above'];
+      $current = $wrong;
+    } while (!$done);
